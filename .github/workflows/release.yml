@@ -1,0 +1,61 @@
+name: Build macOS app
+
+on:
+  push:
+    tags: ["v*"]        # pushing a tag like v1.0.0 builds and publishes a release
+  workflow_dispatch:     # manual run: build + test only, zip kept as a workflow artifact
+
+permissions:
+  contents: write
+
+jobs:
+  build-macos:
+    runs-on: macos-14    # Apple Silicon (arm64)
+    timeout-minutes: 40
+    env:
+      APP: "dist/Man Bun Rip.app"
+      ZIP: "Man-Bun-Rip-macOS-AppleSilicon.zip"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the .app
+        run: PYTHON=python ./build_mac.sh
+
+      - name: Smoke-test the bundled app
+        run: |
+          BIN="$APP/Contents/MacOS/Man Bun Rip"
+          "$BIN" --server > server.log 2>&1 &
+          PID=$!
+          for i in $(seq 1 60); do
+            URL=$(grep -o 'http://127.0.0.1:[0-9]*/' server.log | head -n1 || true)
+            [ -n "$URL" ] && break
+            sleep 1
+          done
+          cat server.log
+          [ -n "$URL" ] || { echo "App did not start"; kill $PID; exit 1; }
+          curl -fsS "${URL}api/health" | tee health.json
+          grep -q '"ffmpeg": *"/' health.json || { echo "Bundled ffmpeg missing"; kill $PID; exit 1; }
+          curl -fsS "${URL}api/search?q=vulfpeck%20dean%20town" | head -c 300; echo
+          curl -fsS -o /dev/null "${URL}static/img/bassist-cutout.png"
+          kill $PID
+
+      - name: Zip the app (keeps the signature intact)
+        run: ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: man-bun-rip-macos
+          path: ${{ env.ZIP }}
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" "$ZIP" \
+            --title "Man Bun Rip $GITHUB_REF_NAME" \
+            --notes-file .github/release-notes.md

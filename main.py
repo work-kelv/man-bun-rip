@@ -44,7 +44,7 @@ def main() -> None:
     url = f"http://127.0.0.1:{port}/"
 
     if "--server" in sys.argv:
-        print(f"{APP_NAME} running at {url}  (Ctrl+C to quit)")
+        print(f"{APP_NAME} running at {url}  (Ctrl+C to quit)", flush=True)
         try:
             while True:
                 time.sleep(1)
