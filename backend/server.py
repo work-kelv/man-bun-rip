@@ -29,7 +29,7 @@ class RevealRequest(BaseModel):
 
 
 class FolderRequest(BaseModel):
-    path: str | None = None  # None resets to ~/Downloads
+    path: str | None = None  # None resets to the Desktop
 
 
 # The pywebview window (set by main.py) so the API can open native dialogs.

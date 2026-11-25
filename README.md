@@ -12,7 +12,7 @@ A macOS desktop app for bass practice: search YouTube and download tracks as MP3
 | **Formats** | **MP3 320 kbps** (default), **WAV** (uncompressed, best for DAWs/transcription), **M4A**, **MP4 video up to 1080p**. |
 | **Practice speed** | 100% / 90% / 80% / 75% / 60%. Slowing uses ffmpeg's `atempo` filter, which keeps the pitch. MP4 video is slowed to match. |
 | **Live progress** | Percent, speed and ETA, streamed via Server-Sent Events. Downloads can be cancelled. |
-| **Choose where to save** | Defaults to `~/Downloads`. **Change…** in the sidebar opens a folder picker; the choice is remembered. Files are named like `VULFPECK - Dean Town (80% speed).mp3`, with a **Show in Finder** button when done. |
+| **Choose where to save** | Defaults to your **Desktop**. **Change…** in the sidebar opens a folder picker; the choice is remembered. Files are named like `VULFPECK - Dean Town (80% speed).mp3`, with a **Show in Finder** button when done. |
 | **Light & dark mode** | Light by default; the moon/sun button in the top-right switches theme (remembered). |
 | **Update yt-dlp** | Header button. YouTube changes often; if downloads start failing, click this and restart the app. |
 
@@ -89,7 +89,7 @@ xcrun notarytool submit ManBunRip.zip --apple-id you@example.com --team-id TEAMI
 xcrun stapler staple "dist/Man Bun Rip.app"
 ```
 
-On first download, macOS asks whether **Man Bun Rip** may access your **Downloads** folder (or whichever folder you picked). Click **Allow**.
+On first download, macOS asks whether **Man Bun Rip** may access your **Desktop** (or whichever folder you picked). Click **Allow**.
 
 ## Keeping yt-dlp up to date
 
@@ -120,7 +120,7 @@ python main.py --server    # backend only; open the printed URL in a browser
 | POST | `/api/download` | `{video_id, format: mp3 (default)\|wav\|m4a\|mp4, speed: 1\|0.9\|0.8\|0.75\|0.6, title}` → `{task_id}` |
 | GET | `/api/progress/{task_id}` | Server-Sent Events progress stream |
 | POST | `/api/cancel/{task_id}` | cancel a download |
-| GET/POST | `/api/download-dir` | read / set the save folder (`{path}`; `null` resets to ~/Downloads) |
+| GET/POST | `/api/download-dir` | read / set the save folder (`{path}`; `null` resets to ~/Desktop) |
 | POST | `/api/download-dir/choose` | open the native folder picker |
 | POST | `/api/reveal` | `{path}` → `open -R` (only files saved by the app) |
 | POST | `/api/update` | upgrade yt-dlp |

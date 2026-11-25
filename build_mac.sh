@@ -76,7 +76,8 @@ PLIST="$APP/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity dict" "$PLIST" 2>/dev/null || true
 /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity:NSAllowsLocalNetworking bool true" "$PLIST" 2>/dev/null \
   || /usr/libexec/PlistBuddy -c "Set :NSAppTransportSecurity:NSAllowsLocalNetworking true" "$PLIST"
-/usr/libexec/PlistBuddy -c "Add :NSDownloadsFolderUsageDescription string 'Man Bun Rip saves your tracks to the Downloads folder.'" "$PLIST" 2>/dev/null || true
+/usr/libexec/PlistBuddy -c "Add :NSDesktopFolderUsageDescription string 'Man Bun Rip saves your tracks to the Desktop.'" "$PLIST" 2>/dev/null || true
+/usr/libexec/PlistBuddy -c "Add :NSDownloadsFolderUsageDescription string 'Man Bun Rip can save your tracks to the Downloads folder.'" "$PLIST" 2>/dev/null || true
 /usr/libexec/PlistBuddy -c "Add :NSHighResolutionCapable bool true" "$PLIST" 2>/dev/null || true
 
 # 6. Clear quarantine + ad-hoc sign (needed after editing Info.plist) -----------

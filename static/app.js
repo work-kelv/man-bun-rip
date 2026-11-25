@@ -287,7 +287,7 @@
   els.folderReset.addEventListener("click", async () => {
     try {
       showFolder(await api("/api/download-dir", { method: "POST", body: JSON.stringify({ path: null }) }));
-      showNotice("New downloads will be saved to your Downloads folder.", "info");
+      showNotice("New downloads will be saved to your Desktop.", "info");
     } catch (err) { showNotice(err.message); }
   });
 

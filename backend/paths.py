@@ -43,7 +43,12 @@ def updated_pylib_dir() -> Path:
 
 
 def default_downloads_dir() -> Path:
-    return Path.home() / "Downloads"
+    """The Desktop (Windows may redirect it into OneDrive)."""
+    desktop = Path.home() / "Desktop"
+    onedrive = Path.home() / "OneDrive" / "Desktop"
+    if not desktop.is_dir() and onedrive.is_dir():
+        return onedrive
+    return desktop
 
 
 def _settings_file() -> Path:
@@ -62,7 +67,7 @@ def save_settings(settings: dict) -> None:
 
 
 def downloads_dir() -> Path:
-    """The user's chosen save folder, falling back to ~/Downloads if it's gone."""
+    """The user's chosen save folder, falling back to the Desktop if it's gone."""
     chosen = load_settings().get("download_dir")
     if chosen and Path(chosen).is_dir():
         return Path(chosen)
@@ -72,7 +77,7 @@ def downloads_dir() -> Path:
 
 
 def set_downloads_dir(folder: str | None) -> Path:
-    """Persist a new save folder (None resets to ~/Downloads). Raises ValueError if unusable."""
+    """Persist a new save folder (None resets to the Desktop). Raises ValueError if unusable."""
     settings = load_settings()
     if not folder:
         settings.pop("download_dir", None)
