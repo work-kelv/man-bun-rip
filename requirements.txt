@@ -1,0 +1,5 @@
+fastapi>=0.110
+uvicorn>=0.29
+pywebview>=5.0
+# [default] pulls in yt-dlp-ejs (YouTube JS challenge solver, used with deno) + certifi etc.
+yt-dlp[default]>=2025.11.12

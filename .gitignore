@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+build/
+dist/
+*.spec
+bin/*
+!bin/.gitkeep
+.DS_Store
+Gemini_Generated_Image_*.jpg
